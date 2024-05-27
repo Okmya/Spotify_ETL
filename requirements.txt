@@ -1,0 +1,6 @@
+wheel
+spotipy
+pandas
+sqlalchemy
+pyspark
+psycopg2-binary

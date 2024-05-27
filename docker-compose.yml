@@ -1,0 +1,27 @@
+services:
+  db:
+    container_name: "db_postgres"
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=spotify_database
+
+  spark:
+    image: jupyter/pyspark-notebook:latest
+    user: root
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./postgresql-42.7.3.jar:/postgresql-42.7.3.jar
+      - .:/home/jovyan
+    command: /bin/bash -c "pip install --no-cache-dir -r /home/jovyan/requirements.txt && python3 /home/jovyan/transformation_load.py"
+
+volumes:
+  db_data:
+
+

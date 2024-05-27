@@ -1,2 +1,11 @@
 
 .cache
+data_flow.ipynb
+data_spotify.csv
+data_spotify_test.csv
+DoZrobienia.txt
+extract_spotify_old.py
+postgresql-42.7.3.jar
+recently_played_tracks.csv
+spotify_recently_played_data.json
+test_extract.py
