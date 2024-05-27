@@ -99,7 +99,7 @@ def etl_spotify():
     # create albums list
     album_list = get_albums(recently_played)
     check_data.check_date(album_list)
-    #print(album_list)
+    # print(album_list)
     # create artists list
     artist_list = get_artists(recently_played)
 
@@ -107,10 +107,6 @@ def etl_spotify():
     song_list = get_songs(recently_played)
 
     return album_list, artist_list, song_list
-
-    # Zapis do tych danych na razie do pliku zeby je zbierac
-    # TODO: pozmieniac te etl pod pysparka
-    # TODO: pobierac dane na plikow csv, zrobic pyspark df, zapisac do postgresa
 
 
 etl_spotify()

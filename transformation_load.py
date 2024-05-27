@@ -64,8 +64,7 @@ def spark_transformation():
     # song_df.show(10)
     # album_df.show(10)
 
-    # configuration of jdbc
-    # Konfiguracja połączenia JDBC z PostgreSQL
+    # configuration of jdbc connection with PostgreSQL
     jdbc_url = "jdbc:postgresql://db_postgres:5432/spotify_database"
     connection_properties = {
         "user": "admin",
@@ -74,16 +73,14 @@ def spark_transformation():
         "truncate": "true",
     }
 
-    # connect with sqlAlchemy to make sql query
-    # Połączenie za pomocą SQLAlchemy do wykonywania zapytań SQL
+    # Connect to PostgreSQL using SQLAlchemy to execute SQL queries
     engine = create_engine(
         f"postgresql+psycopg2://admin:admin@db_postgres:5432/spotify_database"
     )
 
     connection = engine.connect()
-    # Utworzenie tymczasowych tabel
 
-    # Usunięcie tymczasowych tabel jeśli istnieją
+    # delete table if exists
     connection.execute(text("DROP TABLE IF EXISTS tmp_song"))
     connection.execute(text("DROP TABLE IF EXISTS tmp_album"))
     connection.execute(text("DROP TABLE IF EXISTS tmp_artist"))
@@ -127,7 +124,7 @@ def spark_transformation():
     )
 
     connection.commit()
-    # Wgrywanie danych do PostgreSQL za pomocą tymczasowych tabel
+    # write data to PostgreSQL
     song_df.write.jdbc(
         url=jdbc_url,
         table="tmp_song",
@@ -147,8 +144,8 @@ def spark_transformation():
         properties=connection_properties,
     )
 
-    # Wykonanie zapytań SQL w celu przeniesienia danych z tymczasowych tabel do docelowych
-    # Przeniesienie danych z tmp_song do song
+    # execute SQL queries to move data from temporary tables to target tables
+    # Move data from tmp_song to song
     connection.execute(
         text(
             """INSERT INTO song (unique_id,song_id, song_name, duration_ms, url, popularity, time_played, album_id, artist_id)
@@ -160,7 +157,7 @@ def spark_transformation():
         )
     )
 
-    # Przeniesienie danych z tmp_album do album
+    # Move data from tmp_album to album
     connection.execute(
         text(
             """INSERT INTO album (album_id, name, release_date, total_tracks, url)
@@ -172,7 +169,7 @@ def spark_transformation():
         )
     )
 
-    # Przeniesienie danych z tmp_artist do artist
+    # Move data from tmp_artist to artist
     connection.execute(
         text(
             """INSERT INTO artist (artist_id, name, url)
@@ -184,7 +181,7 @@ def spark_transformation():
         )
     )
 
-    # Usunięcie tymczasowych tabel
+    # Drop temporary tables
     connection.execute(text("DROP TABLE IF EXISTS tmp_song"))
     connection.execute(text("DROP TABLE IF EXISTS tmp_album"))
     connection.execute(text("DROP TABLE IF EXISTS tmp_artist"))
@@ -193,7 +190,7 @@ def spark_transformation():
 
     print("Zakonczenie procesu ETL")
 
-    # Zatrzymanie sesji Spark
+    # close connection
     spark.stop()
 
 
