@@ -98,6 +98,7 @@ def etl_spotify():
 
     # create albums list
     album_list = get_albums(recently_played)
+    
     check_data.check_date(album_list)
     # print(album_list)
     # create artists list

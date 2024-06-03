@@ -43,9 +43,6 @@ def spark_transformation():
         "time_played", expr("date_format(time_played, 'yyyy-MM-dd HH:mm:ss')")
     )
 
-    # convert to UNIX timestamp
-    song_df = song_df.withColumn("UNIX_Time_Stamp", expr("unix_timestamp(time_played)"))
-
     # generate unique id
     song_df = song_df.withColumn("unique_id", expr("uuid()"))
 
